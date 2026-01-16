@@ -1,0 +1,126 @@
+<div class="detail-page-container">
+  <div class="top-nav">
+    <button mat-button (click)="backToList()">
+      <mat-icon>arrow_back</mat-icon> Back to List
+    </button>
+  </div>
+
+  <mat-card class="profile-card mat-elevation-z4" *ngIf="candidate; else loadingTemplate">
+    
+    <ng-container *ngIf="!isEditing">
+      <mat-card-header>
+        <div mat-card-avatar class="avatar-circle">
+          <mat-icon color="primary">account_circle</mat-icon>
+        </div>
+        <mat-card-title>{{ candidate.name }} {{ candidate.surname }}</mat-card-title>
+        <mat-card-subtitle>Technical Analysis Result</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Calculated Seniority</label>
+            <p class="seniority-badge" [ngClass]="candidate.seniority.toLowerCase()">
+              {{ candidate.seniority | uppercase }}
+            </p>
+          </div>
+
+          <div class="info-item">
+            <label>Years of Experience</label>
+            <p class="value-text">{{ candidate.years }} Years</p>
+          </div>
+
+          <div class="info-item">
+            <label>Availability Status</label>
+            <div class="status-display">
+              <mat-icon [color]="candidate.availability ? 'primary' : 'warn'">
+                {{ candidate.availability ? 'check_circle' : 'cancel' }}
+              </mat-icon>
+              <span>{{ candidate.availability ? 'Available for Hiring' : 'Currently Unavailable' }}</span>
+            </div>
+          </div>
+
+          <div class="info-item full-width">
+            <label>Database Reference (ID)</label>
+            <code class="id-code">{{ candidate._id }}</code>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-button color="primary" (click)="toggleEdit()">
+          <mat-icon>edit</mat-icon> EDIT PROFILE
+        </button>
+        <button mat-button color="warn" (click)="deleteCandidate()">
+          <mat-icon>delete_forever</mat-icon> DELETE
+        </button>
+      </mat-card-actions>
+    </ng-container>
+
+    <ng-container *ngIf="isEditing">
+      <mat-card-header>
+        <div mat-card-avatar class="avatar-circle edit-mode">
+          <mat-icon color="accent">edit_note</mat-icon>
+        </div>
+        <mat-card-title>Update Candidate Info</mat-card-title>
+        <mat-card-subtitle>Modifying basic identification data</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-divider></mat-divider>
+
+      <form [formGroup]="candidateForm" (ngSubmit)="updateCandidate()">
+        <mat-card-content>
+          <div class="edit-form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" placeholder="Update name">
+              <mat-error *ngIf="candidateForm.get('name')?.invalid">Name is required (min. 2 chars)</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Surname</mat-label>
+              <input matInput formControlName="surname" placeholder="Update surname">
+              <mat-error *ngIf="candidateForm.get('surname')?.invalid">Surname is required (min. 2 chars)</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Seniority</mat-label>
+              <mat-select formControlName="seniority">
+                <mat-option *ngFor="let opt of seniorityOptions" [value]="opt">{{opt}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Years of Experience</mat-label>
+              <input matInput type="number" formControlName="years">
+            </mat-form-field>
+
+            <div class="toggle-box">
+              <mat-slide-toggle formControlName="availability" color="primary">
+                Immediate Availability
+              </mat-slide-toggle>
+            </div>
+          </div>
+          
+          <p class="edit-hint">Note: Seniority and years of experience are calculated via Excel and cannot be edited manually here.</p>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button type="button" (click)="cancelEdit()">CANCEL</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="candidateForm.invalid">
+            <mat-icon>check</mat-icon> SAVE CHANGES
+          </button>
+        </mat-card-actions>
+      </form>
+    </ng-container>
+  </mat-card>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-state">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Fetching technical details from database...</p>
+    </div>
+  </ng-template>
+</div>

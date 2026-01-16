@@ -1,0 +1,44 @@
+.main-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    align-items: flex-start;
+
+    .file-input-wrapper {
+      display: flex;
+      flex-direction: column;
+      
+      .file-btn {
+        height: 56px; // Altura exacta del mat-form-field outline
+        margin-top: 4px; // Ajuste para compensar el label flotante
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.12);
+        
+        mat-icon { margin-right: 8px; }
+      }
+
+      .error-spacer {
+        height: 22px; // Espacio que ocupa el mat-error en los otros campos
+        padding: 0 10px;
+        .error-text { color: #f44336; font-size: 12px; }
+      }
+    }
+  }
+
+  .custom-table {
+    width: 100%;
+    margin-top: 20px;
+    .candidate-row { 
+      cursor: pointer; 
+      &:hover { background: #f5f5f5; }
+    }
+  }
+}
