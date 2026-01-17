@@ -1,12 +1,12 @@
-import { RenderMode, ServerRoute } from '@angular/ssr';
+import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
+import { provideServerRendering, withRoutes } from '@angular/ssr';
+import { appConfig } from './app.config';
+import { serverRoutes } from './app.routes.server';
 
-export const serverRoutes: ServerRoute[] = [
-  {
-    path: 'candidate/:id',
-    renderMode: RenderMode.Server
-  },
-  {
-    path: '**',
-    renderMode: RenderMode.Prerender
-  }
-];
+const serverConfig: ApplicationConfig = {
+  providers: [
+    provideServerRendering(withRoutes(serverRoutes))
+  ]
+};
+
+export const config = mergeApplicationConfig(appConfig, serverConfig);
